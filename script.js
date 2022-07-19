@@ -1,6 +1,4 @@
 const GameBoard =  (() => {
-    //let board = () => console.log(`hello my name is ${name}`);
-
     let board = [" "," "," "
                 ," "," "," "
                 ," "," "," "];
@@ -9,16 +7,13 @@ const GameBoard =  (() => {
         if (index > 8) {
             return undefined;
         }
-
         return board[index];
     };
 
     const setValAt = (index, val) => {
-
         if (index > 8 || (val !== 'X' & val !== 'O')) {
             return false;
         }
-
         else{
             if( getValAt(index) === " " ) {
                 board[index] = val;
@@ -30,23 +25,31 @@ const GameBoard =  (() => {
 
     const toString = ()=>{
         let str = "";
-
         for (let index = 0; index < board.length; index++) {
             str += board[index];
             if ((index + 1) % 3 == 0) {
                 str += "\n";
             }
-            
         }
-
         return str;
     };
 
-
     return {getValAt , setValAt , toString};
-
     })();
 
-    console.log(GameBoard.setValAt(8,'X'));
 
-    console.log(GameBoard.toString())
+const PlayerFactory = (name, side) =>{
+
+    if (side !== "X" && side !== "O") {
+        return undefined;
+    }
+
+    const getName = () => name;
+    const getSide = () => side;
+
+    return {getName, getSide};
+};
+
+const player1 = PlayerFactory("Jimmy", "O");
+
+console.log(`Name : ${player1.getName()} , plays as : ${player1.getSide()}`);
