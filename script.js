@@ -139,7 +139,7 @@ pageCells.forEach( cell => {
         
         if(status === "win" || status === "draw"){
             
-            GameBoard.resetBoard();
+            GameBoard.resetBoard(document);
         }
         flowControl.sideChange();
         
@@ -161,5 +161,13 @@ document.querySelector(".first-player span").addEventListener("click",()=>{
         picks[0].classList.add("pick");
         player2pick.textContent = "X";
     }
+});
+
+document.querySelector(".reset").addEventListener('click', ()=>{
+    flowControl.reset();
+    
+    GameBoard.resetBoard();
+    GameBoard.renderBoard(document);
+    
 });
 

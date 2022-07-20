@@ -173,3 +173,26 @@ span > i:last-child{
 .second-player > span{
     padding-inline: 0.2em;
 }
+
+.btn-wrap{
+    margin: 32px;
+    display: flex;
+    justify-content: center;
+}
+
+.btn{
+    font-size: 2em;
+    font-weight: 600;
+
+    padding: 0.5em;
+
+    border: none;
+    background-color: var(--orange-300);
+    color: var(--orange-900);
+
+    border-radius: 0.5em;
+}
+
+.btn:hover{
+    background-color: #fed7aa;
+}
