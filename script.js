@@ -1,7 +1,7 @@
 const GameBoard =  (() => {
-    let board = ["X","O","X"
-                ," "," ","X"
-                ," ","X"," "];
+    let board = [" "," "," "
+                ," "," "," "
+                ," "," "," "];
 
     const getValAt = (index) => { 
         if (index > 8) {
@@ -38,17 +38,82 @@ const GameBoard =  (() => {
         return str;
     };
 
-    const renderBoard = (doc) =>{
-        pageCell = document.querySelectorAll(".cell");
+    const isFull = ()=>{
+        full = true;
 
-       for (let index = 0; index < board.length; index++) {
-            pageCell[index].textContent = board[index];
-       }
+        board.forEach(cell => {
+            if(cell === " "){
+                full = false;
+            }
+        });
+
+        return full;
     }
 
-    return {getValAt , setValAt , toString, getBoard, renderBoard};
+    const renderBoard = (doc) =>{
+        let pageCells = doc.querySelectorAll(".cell");
+
+        for (let index = 0; index < board.length; index++) {
+            pageCells[index].textContent = board[index];
+       }
+    };
+
+    const resetBoard = () =>{
+        board = [" "," "," "
+                ," "," "," "
+                ," "," "," "];
+    };
+
+    const checkWin = () =>{
+        const winningPos = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+        let status = "";
+
+        winningPos.forEach(pos => {
+                if((board[pos[0]] === board[pos[1]] & board[pos[0]] === board[pos[2]]) & board[pos[0]] !== " "){
+                    status = "win";
+                }
+            });
+
+            full = isFull();
+            if(full & status === ""){
+                status = "draw"
+            }
+
+            return status;
+    };
+
+    return {getValAt , setValAt , toString, renderBoard, checkWin, resetBoard};
     })();
 
+const flowControl = (() => {
+    let turn = "X";
+
+    const sideChange = ()=>{
+        switch (turn) {
+            case "X":
+                turn = "O"
+                break;
+            
+            case "O":
+                turn = "X"
+                break;
+
+            default:
+                break;
+        }
+        
+    };
+
+    const getTurn = ()=> {
+        return turn;
+    }
+
+    const reset = ()=> {
+        turn = "X";
+    }
+
+    return {sideChange, getTurn, reset};
+})();
 
 const PlayerFactory = (name, side) =>{
 
@@ -63,5 +128,23 @@ const PlayerFactory = (name, side) =>{
 };
 
 const player1 = PlayerFactory("Jimmy", "O");
+const player2 = PlayerFactory("Bimmy", "X");
 
-GameBoard.renderBoard();
+let pageCells = document.querySelectorAll(".cell");
+
+pageCells.forEach( cell => {
+    cell.addEventListener('click', ()=>{
+        let index = cell.getAttribute("index");
+
+        GameBoard.setValAt(index, flowControl.getTurn());
+        if(GameBoard.checkWin() === "win" || GameBoard.checkWin() === "draw"){
+            GameBoard.renderBoard(document);
+            alert(flowControl.getTurn() + " WINSSSSS");
+            GameBoard.resetBoard();
+        }
+        flowControl.sideChange();
+        GameBoard.renderBoard(document);
+    });
+});
+
+GameBoard.checkWin();
