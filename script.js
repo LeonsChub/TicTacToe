@@ -127,24 +127,39 @@ const PlayerFactory = (name, side) =>{
     return {getName, getSide};
 };
 
-const player1 = PlayerFactory("Jimmy", "O");
-const player2 = PlayerFactory("Bimmy", "X");
-
 let pageCells = document.querySelectorAll(".cell");
 
 pageCells.forEach( cell => {
     cell.addEventListener('click', ()=>{
         let index = cell.getAttribute("index");
-
-        GameBoard.setValAt(index, flowControl.getTurn());
-        if(GameBoard.checkWin() === "win" || GameBoard.checkWin() === "draw"){
-            GameBoard.renderBoard(document);
-            alert(flowControl.getTurn() + " WINSSSSS");
+        GameBoard.setValAt(index, flowControl.getTurn());  
+        GameBoard.renderBoard(document);
+        
+        let status = GameBoard.checkWin();
+        
+        if(status === "win" || status === "draw"){
+            
             GameBoard.resetBoard();
         }
         flowControl.sideChange();
-        GameBoard.renderBoard(document);
+        
     });
 });
 
-GameBoard.checkWin();
+document.querySelector(".first-player span").addEventListener("click",()=>{
+    let picks = document.querySelectorAll("span i");
+    let player2pick =document.querySelector(".second-player span");
+
+    if(picks[0].classList.contains("pick")){
+        picks[0].classList.remove("pick");
+        picks[1].classList.add("pick");
+        player2pick.textContent = "O";
+        
+    }
+    else{
+        picks[1].classList.remove("pick");
+        picks[0].classList.add("pick");
+        player2pick.textContent = "X";
+    }
+});
+
