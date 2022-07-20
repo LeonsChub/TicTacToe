@@ -1,7 +1,7 @@
 const GameBoard =  (() => {
-    let board = [" "," "," "
-                ," "," "," "
-                ," "," "," "];
+    let board = ["X","O","X"
+                ," "," ","X"
+                ," ","X"," "];
 
     const getValAt = (index) => { 
         if (index > 8) {
@@ -23,6 +23,10 @@ const GameBoard =  (() => {
         return false;
     }
 
+    const getBoard = () =>{
+        return board;
+    }
+
     const toString = ()=>{
         let str = "";
         for (let index = 0; index < board.length; index++) {
@@ -34,7 +38,15 @@ const GameBoard =  (() => {
         return str;
     };
 
-    return {getValAt , setValAt , toString};
+    const renderBoard = (doc) =>{
+        pageCell = document.querySelectorAll(".cell");
+
+       for (let index = 0; index < board.length; index++) {
+            pageCell[index].textContent = board[index];
+       }
+    }
+
+    return {getValAt , setValAt , toString, getBoard, renderBoard};
     })();
 
 
@@ -52,4 +64,4 @@ const PlayerFactory = (name, side) =>{
 
 const player1 = PlayerFactory("Jimmy", "O");
 
-console.log(`Name : ${player1.getName()} , plays as : ${player1.getSide()}`);
+GameBoard.renderBoard();
