@@ -38,6 +38,17 @@ const GameBoard =  (() => {
         return str;
     };
 
+    const isEmpty = ()=>{
+        let empty = true;
+        board.forEach(cell => {
+            if(cell === "X" || cell === "O"){
+                empty = false;
+            }
+        });
+
+        return empty;
+    }
+
     const isFull = ()=>{
         full = true;
 
@@ -82,7 +93,7 @@ const GameBoard =  (() => {
             return status;
     };
 
-    return {getValAt , setValAt , toString, renderBoard, checkWin, resetBoard};
+    return {getValAt , setValAt , toString, renderBoard, checkWin, resetBoard, isEmpty};
     })();
 
 const flowControl = (() => {
@@ -116,7 +127,6 @@ const flowControl = (() => {
 })();
 
 const PlayerFactory = (name, side) =>{
-
     if (side !== "X" && side !== "O") {
         return undefined;
     }
@@ -124,48 +134,106 @@ const PlayerFactory = (name, side) =>{
     const getName = () => name;
     const getSide = () => side;
 
-    return {getName, getSide};
+    const setSide = (c) =>{side = c};
+
+    const toString =()=>{
+        return {name,side};
+    }
+
+    return {getName, getSide,setSide,toString};
 };
 
+renderDisplay = ()=>{
+    switch (flowControl.getTurn()) {
+        case "X":
+            if(player1.getSide() == "X"){
+                displayPlayer.textContent = `${player1.getName()}'s turn`;
+            }
+            if(player2.getSide() == "X"){
+                displayPlayer.textContent = `${player2.getName()}'s turn`;
+            }
+            break;
+    
+        case "O":
+            if(player1.getSide() == "O"){
+                displayPlayer.textContent = `${player1.getName()}'s turn`;
+            }
+            if(player2.getSide() == "O"){
+                displayPlayer.textContent = `${player2.getName()}'s turn`;
+            }
+            break;
+    
+        default:
+            break;
+    }
+}
+
 let pageCells = document.querySelectorAll(".cell");
+let displayPlayer = document.querySelector(".show-turn h2");
+
+let player1 = PlayerFactory("Player 1","X");
+let player2 = PlayerFactory("Player 2","O");
+
+renderDisplay();
 
 pageCells.forEach( cell => {
     cell.addEventListener('click', ()=>{
         let index = cell.getAttribute("index");
         GameBoard.setValAt(index, flowControl.getTurn());  
         GameBoard.renderBoard(document);
-        
+        flowControl.sideChange();
+
+        renderDisplay();
+
         let status = GameBoard.checkWin();
+
         
         if(status === "win" || status === "draw"){
             
-            GameBoard.resetBoard(document);
+            GameBoard.resetBoard();
+            flowControl.reset();
         }
-        flowControl.sideChange();
         
     });
 });
 
-document.querySelector(".first-player span").addEventListener("click",()=>{
-    let picks = document.querySelectorAll("span i");
-    let player2pick =document.querySelector(".second-player span");
+console.log(player1.toString() + " " + player2.toString());
 
-    if(picks[0].classList.contains("pick")){
-        picks[0].classList.remove("pick");
-        picks[1].classList.add("pick");
-        player2pick.textContent = "O";
-        
+document.querySelector(".first-player span").addEventListener("click",()=>{
+    if(GameBoard.isEmpty()){
+        let picks = document.querySelectorAll("span i");
+        let player2pick =document.querySelector(".second-player span");
+    
+        if(picks[0].classList.contains("pick")){
+            picks[0].classList.remove("pick");
+            picks[1].classList.add("pick");
+            player2pick.textContent = "X";  
+            
+            player1.setSide("O");
+            player2.setSide("X");
+        }
+    
+        else if(picks[1].classList.contains("pick")){
+            picks[1].classList.remove("pick");
+            picks[0].classList.add("pick");
+            player2pick.textContent = "O";
+    
+            player1.setSide("X");
+            player2.setSide("O");
+        }
+    
+        console.log(player1.toString() + " " + player2.toString());
+        renderDisplay();
     }
     else{
-        picks[1].classList.remove("pick");
-        picks[0].classList.add("pick");
-        player2pick.textContent = "X";
+        console.log(GameBoard.isEmpty());
+        alert("game in progress");
     }
+    
 });
 
 document.querySelector(".reset").addEventListener('click', ()=>{
-    flowControl.reset();
-    
+    flowControl.reset();    
     GameBoard.resetBoard();
     GameBoard.renderBoard(document);
     
