@@ -179,36 +179,39 @@ renderDisplay();
 pageCells.forEach( cell => {
     cell.addEventListener('click', ()=>{
         let index = cell.getAttribute("index");
-        GameBoard.setValAt(index, flowControl.getTurn());  
-        GameBoard.renderBoard(document);
-        flowControl.sideChange();
-        renderDisplay();
 
-        let status = GameBoard.checkWin();
-
-        
-        if(status === "win" || status === "draw"){
+        if(GameBoard.getValAt(index) === " "){
+            GameBoard.setValAt(index, flowControl.getTurn());  
+            GameBoard.renderBoard(document);
             flowControl.sideChange();
-            switch (status) {
-                case "win":
-                    if(player1.getSide() === flowControl.getTurn()){
-                        displayPlayer.textContent = `${player1.getName()} WINSSSSSSS `;
-                    }
-                    if(player2.getSide() === flowControl.getTurn()){
-                        displayPlayer.textContent = `${player2.getName()} WINSSSSSSS`;
-                    }
-                    break;
-
-                case "draw":
-                    displayPlayer.textContent = "Draw";
-                    break;
-
-                default:
-                    break;
+            renderDisplay();
+    
+            let status = GameBoard.checkWin();
+    
+            
+            if(status === "win" || status === "draw"){
+                flowControl.sideChange();
+                switch (status) {
+                    case "win":
+                        if(player1.getSide() === flowControl.getTurn()){
+                            displayPlayer.textContent = `${player1.getName()} WINSSSSSSS `;
+                        }
+                        if(player2.getSide() === flowControl.getTurn()){
+                            displayPlayer.textContent = `${player2.getName()} WINSSSSSSS`;
+                        }
+                        break;
+    
+                    case "draw":
+                        displayPlayer.textContent = "Draw";
+                        break;
+    
+                    default:
+                        break;
+                }
+    
+                GameBoard.resetBoard();
+                flowControl.reset();
             }
-
-            GameBoard.resetBoard();
-            flowControl.reset();
         }
         
     });
