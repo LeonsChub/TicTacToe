@@ -182,14 +182,31 @@ pageCells.forEach( cell => {
         GameBoard.setValAt(index, flowControl.getTurn());  
         GameBoard.renderBoard(document);
         flowControl.sideChange();
-
         renderDisplay();
 
         let status = GameBoard.checkWin();
 
         
         if(status === "win" || status === "draw"){
-            
+            flowControl.sideChange();
+            switch (status) {
+                case "win":
+                    if(player1.getSide() === flowControl.getTurn()){
+                        displayPlayer.textContent = `${player1.getName()} WINSSSSSSS `;
+                    }
+                    if(player2.getSide() === flowControl.getTurn()){
+                        displayPlayer.textContent = `${player2.getName()} WINSSSSSSS`;
+                    }
+                    break;
+
+                case "draw":
+                    displayPlayer.textContent = "Draw";
+                    break;
+
+                default:
+                    break;
+            }
+
             GameBoard.resetBoard();
             flowControl.reset();
         }
@@ -222,7 +239,6 @@ document.querySelector(".first-player span").addEventListener("click",()=>{
             player2.setSide("O");
         }
     
-        console.log(player1.toString() + " " + player2.toString());
         renderDisplay();
     }
     else{
