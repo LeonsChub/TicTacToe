@@ -194,10 +194,10 @@ pageCells.forEach( cell => {
                 switch (status) {
                     case "win":
                         if(player1.getSide() === flowControl.getTurn()){
-                            displayPlayer.textContent = `${player1.getName()} WINSSSSSSS `;
+                            displayPlayer.textContent = `${player1.getName()} Wins`;
                         }
                         if(player2.getSide() === flowControl.getTurn()){
-                            displayPlayer.textContent = `${player2.getName()} WINSSSSSSS`;
+                            displayPlayer.textContent = `${player2.getName()} Wins`;
                         }
                         break;
     
